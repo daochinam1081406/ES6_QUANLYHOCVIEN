@@ -1,0 +1,26 @@
+body {
+  background-color: #1e1e1e; /* Màu nền chủ đề tối */
+  color: #ffffff; /* Màu chữ trắng */
+}
+
+.navbar {
+  background-color: #343a40; /* Màu nền header */
+}
+
+.navbar-dark .navbar-toggler-icon {
+  background-color: #ffffff; /* Màu biểu tượng menu mobile */
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: #ffffff; /* Màu chữ trong menu */
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: #17a2b8; /* Màu chữ khi hover trên menu */
+}
+
+.footer {
+  background-color: #343a40; /* Màu nền footer */
+  color: #ffffff; /* Màu chữ trong footer */
+  padding: 10px 0;
+}
