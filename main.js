@@ -117,8 +117,6 @@ class ListPerson {
   }
 }
 
-let editingPerson = null;
-
 document.addEventListener("DOMContentLoaded", function () {
   const personList = new ListPerson();
 
@@ -174,6 +172,19 @@ document.addEventListener("DOMContentLoaded", function () {
       orderValueLabel.style.display = "block";
       ratingLabel.style.display = "block";
     }
+  });
+  // Lắng nghe sự kiện thay đổi của dropdown
+  const userTypeFilter = document.getElementById("filterUserType");
+
+  userTypeFilter.addEventListener("change", function () {
+    const selectedUserType = userTypeFilter.value;
+
+    // Gọi hàm filterByUserType để lọc dữ liệu theo loại người dùng
+    const filteredData = personList.filterByUserType(selectedUserType);
+
+    // Render lại danh sách người dùng với dữ liệu đã được lọc
+    if (selectedUserType === "All") renderUserList();
+    else renderUserListAll(filteredData);
   });
 
   // Lắng nghe sự kiện thay đổi lựa chọn loại người dùng
@@ -279,14 +290,6 @@ document.addEventListener("DOMContentLoaded", function () {
   addPersonButton.addEventListener("click", function () {
     clearForm();
   });
-  userList.addEventListener("click", function (event) {
-    if (event.target.classList.contains("edit-button")) {
-      const code = event.target.getAttribute("data-code");
-      const person = personList.persons.find((p) => p.code === code);
-      populateForm(person);
-      selectedUserCode = code;
-    }
-  });
 
   function isCodeUnique(code) {
     return !personList.persons.some(
@@ -350,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
       personList.addPerson(person);
     }
 
-    renderUserList();
+    renderUserList(filteredData);
     clearForm();
   });
 
@@ -377,24 +380,35 @@ document.addEventListener("DOMContentLoaded", function () {
     for (const person of personList.persons) {
       const row = document.createElement("tr");
       row.innerHTML = `
-      <td>${person.name}</td>
-      <td>${person.address}</td>
-      <td>${person.code}</td>
-      <td>${person.email}</td>
-      <td>${person.constructor.name}</td>
-      <td>
-      
-          <button class="edit-button btn btn-primary  btn-sm" data-code="${person.code}">Chỉnh sửa</button>
-          <button class="delete-button btn btn-danger btn-sm" data-code="${person.code}">Xóa</button>
-      </td>
+            <td>${person.name}</td>
+            <td>${person.address}</td>
+            <td>${person.code}</td>
+            <td>${person.email}</td>
+            <td>${person.constructor.name}</td>
+            <td>
+              <button class="edit-button btn btn-primary btn-sm" data-code="${person.code}">Chỉnh sửa</button>
+              <button class="delete-button btn btn-danger btn-sm" data-code="${person.code}">Xóa</button>
+            </td>
           `;
-      // Xử lý sự kiện khi nút "Chỉnh sửa" được bấm
-      const editButton = row.querySelector(".edit-button");
-      editButton.addEventListener("click", function () {
-        const code = this.getAttribute("data-code");
-        editingPerson = personList.persons.find((p) => p.code === code);
-        populateForm(editingPerson);
-      });
+      userList.appendChild(row);
+    }
+  }
+  function renderUserListAll(data) {
+    userList.innerHTML = "";
+
+    for (const person of data) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+            <td>${person.name}</td>
+            <td>${person.address}</td>
+            <td>${person.code}</td>
+            <td>${person.email}</td>
+            <td>${person.constructor.name}</td>
+            <td>
+              <button class="edit-button btn btn-primary btn-sm" data-code="${person.code}">Chỉnh sửa</button>
+              <button class="delete-button btn btn-danger btn-sm" data-code="${person.code}">Xóa</button>
+            </td>
+          `;
       userList.appendChild(row);
     }
   }

@@ -30,3 +30,16 @@ tr {
 label {
   color: black;
 }
+
+#filterUserType {
+  padding-top: 13px;
+  padding-bottom: 2px;
+  width: 9rem;
+  border-radius: 4px;
+  justify-items: center;
+}
+
+#userList {
+  position: relative;
+  margin-right: 150px; /* Tạo khoảng cách bên phải cho không bị che khuất bởi dropdown */
+}

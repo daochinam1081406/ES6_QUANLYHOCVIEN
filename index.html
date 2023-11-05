@@ -40,6 +40,7 @@
 
     <div class="container mt-4">
       <h1 class="text-center">Danh sách người dùng</h1>
+
       <button
         id="addPersonButton"
         type="button"
@@ -49,6 +50,12 @@
       >
         Thêm người dùng
       </button>
+      <select id="filterUserType">
+        <option value="All">Tất cả</option>
+        <option value="Student">Học sinh</option>
+        <option value="Employee">Nhân viên</option>
+        <option value="Customer">Khách hàng</option>
+      </select>
 
       <table class="table">
         <thead>
