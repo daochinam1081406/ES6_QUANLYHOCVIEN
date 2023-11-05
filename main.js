@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
       personList.addPerson(person);
     }
 
-    renderUserList(filteredData);
+    renderUserList();
     clearForm();
   });
 
