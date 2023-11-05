@@ -24,3 +24,9 @@ body {
   color: #ffffff; /* Màu chữ trong footer */
   padding: 10px 0;
 }
+tr {
+  color: whitesmoke;
+}
+label {
+  color: black;
+}
