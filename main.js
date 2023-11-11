@@ -131,8 +131,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Lắng nghe sự kiện modal hiển thị
   $("#addPersonModal").on("shown.bs.modal", function () {
+    const calculateAverageButton = document.getElementById(
+      "calculateAverageButton"
+    );
+    const calculateSalaryButton = document.getElementById(
+      "calculateSalaryButton"
+    );
     const selectedUserType = userTypeInput.value;
-
+    // Hiển thị các nút tùy thuộc vào người dùng
+    if (selectedUserType === "Student") {
+      document.getElementById("calculateAverageButton").style.display = "block";
+      document.getElementById("calculateSalaryButton").style.display = "none";
+    } else if (selectedUserType === "Employee") {
+      document.getElementById("calculateSalaryButton").style.display = "block";
+      document.getElementById("calculateAverageButton").style.display = "none";
+    } else {
+      document.getElementById("calculateSalaryButton").style.display = "none";
+      document.getElementById("calculateAverageButton").style.display = "none";
+    }
     // Ẩn tất cả các trường nhập dữ liệu
     mathInput.style.display = "none";
     mathLabel.style.display = "none";
@@ -159,11 +175,40 @@ document.addEventListener("DOMContentLoaded", function () {
       mathLabel.style.display = "block";
       physicsLabel.style.display = "block";
       chemistryLabel.style.display = "block";
+
+      calculateAverageButton.addEventListener("click", function () {
+        const math = parseFloat(mathInput.value);
+        const physics = parseFloat(physicsInput.value);
+        const chemistry = parseFloat(chemistryInput.value);
+
+        if (isNaN(math) || isNaN(physics) || isNaN(chemistry)) {
+          alert("Vui lòng nhập đầy đủ thông tin điểm.");
+          return;
+        }
+
+        const average = (math + physics + chemistry) / 3;
+        alert(`Điểm trung bình: ${average.toFixed(2)}`);
+      });
     } else if (selectedUserType === "Employee") {
       workDaysInput.style.display = "block";
       dailySalaryInput.style.display = "block";
       workDaysLabel.style.display = "block";
       dailySalaryLabel.style.display = "block";
+
+      calculateSalaryButton.addEventListener("click", function () {
+        const workDays = parseFloat(workDaysInput.value);
+        const dailySalary = parseFloat(dailySalaryInput.value);
+
+        if (isNaN(workDays) || isNaN(dailySalary)) {
+          alert(
+            "Vui lòng nhập đầy đủ thông tin số ngày làm việc và lương hàng ngày."
+          );
+          return;
+        }
+
+        const salary = workDays * dailySalary;
+        alert(`Lương: ${salary}`);
+      });
     } else if (selectedUserType === "Customer") {
       companyNameInput.style.display = "block";
       orderValueInput.style.display = "block";
@@ -190,6 +235,17 @@ document.addEventListener("DOMContentLoaded", function () {
   // Lắng nghe sự kiện thay đổi lựa chọn loại người dùng
   userTypeInput.addEventListener("change", function () {
     const selectedUserType = userTypeInput.value;
+
+    if (selectedUserType === "Student") {
+      document.getElementById("calculateAverageButton").style.display = "block";
+      document.getElementById("calculateSalaryButton").style.display = "none";
+    } else if (selectedUserType === "Employee") {
+      document.getElementById("calculateSalaryButton").style.display = "block";
+      document.getElementById("calculateAverageButton").style.display = "none";
+    } else {
+      document.getElementById("calculateSalaryButton").style.display = "none";
+      document.getElementById("calculateAverageButton").style.display = "none";
+    }
 
     // Ẩn tất cả các trường nhập dữ liệu
     mathInput.style.display = "none";
@@ -355,6 +411,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     renderUserList();
     clearForm();
+    $("#addPersonModal").modal("hide");
   });
 
   userList.addEventListener("click", function (event) {
@@ -365,12 +422,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Lắng nghe sự kiện click trên nút "Chỉnh sửa" trong danh sách người dùng
   userList.addEventListener("click", function (event) {
     if (event.target.classList.contains("edit-button")) {
       const code = event.target.getAttribute("data-code");
       const person = personList.persons.find((p) => p.code === code);
-      populateForm(person);
+      populateForm(person); // Đảm bảo dữ liệu của người dùng được điền vào modal
       selectedUserCode = code;
+
+      // Sau khi dữ liệu được điền vào modal, hiển thị modal lên màn hình
+      $("#addPersonModal").modal("show");
     }
   });
 
@@ -434,16 +495,19 @@ document.addEventListener("DOMContentLoaded", function () {
     addressInput.value = person.address;
     codeInput.value = person.code;
     emailInput.value = person.email;
-    userTypeInput.value = person.constructor.name;
+    userTypeInput.value = person.type; // Giả sử type là một thuộc tính có sẵn cho tất cả các loại người dùng
 
     if (person instanceof Student) {
+      userTypeInput.value = "Student";
       mathInput.value = person.math;
       physicsInput.value = person.physics;
       chemistryInput.value = person.chemistry;
     } else if (person instanceof Employee) {
+      userTypeInput.value = "Employee";
       workDaysInput.value = person.workDays;
       dailySalaryInput.value = person.dailySalary;
     } else if (person instanceof Customer) {
+      userTypeInput.value = "Customer";
       companyNameInput.value = person.companyName;
       orderValueInput.value = person.orderValue;
       ratingInput.value = person.rating;
